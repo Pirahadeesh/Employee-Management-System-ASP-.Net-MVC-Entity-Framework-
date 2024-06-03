@@ -1,0 +1,47 @@
+﻿@model DGHCM.Models.AccountMaster
+@{
+    ViewBag.Title = "AccountMastersEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <div class="card">
+        <div class="card-body">
+            <form action="/Finance/AccountMastersEdit" method="post">
+                <input type="hidden" name="AccountMasterId" value="@Model.AccountMasterId" />
+
+                <div class="col-md-4 mb-3">
+                    <label for="AccountName">Account Name</label>
+                    <input type="text" id="AccountName" name="AccountName" class="form-control" value="@Model.AccountName" />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="OpeningBalance">Opening Balance</label>
+                    <input type="text" id="OpeningBalance" name="OpeningBalance" class="form-control" value="@Model.OpeningBalance"  />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="AccountType">Account Type</label>
+                    <input type="text" id="AccountType" name="AccountType" class="form-control" value="@Model.BankOrGL" />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <input class="form-check-input" type="checkbox" name="IsActive" id="IsActive" @(Model.IsActive ? "checked" : "") onchange="isActive()">
+                    <label for="IsActive">IsActive</label>
+                </div>
+
+                <button type="submit" name="action" value="save-and-continue" class="btn btn-success">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Function to set IsActive value based on checkbox state
+        function isActive() {
+            var checkbox = document.getElementById("IsActive");
+            checkbox.value = checkbox.checked;
+        }
+
+        // Call isActive function initially to set the checkbox value
+        isActive();
+    </script>

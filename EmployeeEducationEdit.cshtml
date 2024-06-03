@@ -1,0 +1,149 @@
+﻿@model DGHCM.Models.EmployeeEducation
+@{
+    ViewBag.Title = "EmployeeEducationEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+
+
+    <style>
+        .form-control {
+            display: grid
+        }
+
+        .bg-df-success {
+            background: #054f46 !important;
+        }
+
+        .btn-df-secondary {
+            background: #99b0c2fc !important;
+            color: #fff !important;
+        }
+    </style>
+</head>
+
+
+<div class="container-fluid">
+    <div class="card">
+
+        <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center">
+            <div class="card-title text-black mb-0 p-0">Education</div>
+            <div>
+                <a href="~/Employee/EmployeeEducationIndex" class="btn btn-transparent border border-black" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+            </div>
+        </div>
+        @*<div class="card-header bg-df-success text-white d-flex flex-wrap justify-content-between align-items-center">
+
+            <div>
+                <h2 class="text-white m-0">Education</h2>
+            </div>
+            <div>
+                <a href="#" class="btn btn-warning" data-toggle="modal"><i class="fa-solid fa-floppy-disk"></i><span> Save</span></a>
+                <a href="~/Pay#" class="btn btn-df-secondary" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+            </div>
+        </div>*@
+
+
+        <div class="card-body p-4">
+            @*<form class="needs-validation" name="createform" method="post" id="fileForm" enctype="multipart/form-data">*@
+            @*<h2>Education</h2>*@
+
+            @using (Html.BeginForm("EmployeeEducationEdit", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                @*<input hidden type="text" id="hdnEducation" value="@Model.EducationId">*@
+                @Html.HiddenFor(model => model.EducationId)
+                <div class="container ">
+                    <div class="row mb-2">
+                        <div class="col">
+                            <label for="course">Course</label>
+                            @Html.TextBoxFor(model => model.CourseName, new { @class = "form-control", required = "required", value = "@Model.CourseName" })
+                            @*<input type="text" class="form-control" id="course" placeholder="Course" name="course" required value="@Model.CourseName">*@
+                        </div>
+
+                        <div class="col">
+                            <label for="institution">Institution</label>
+                            @Html.TextBoxFor(model => model.Institutions, new { @class = "form-control", required = "required" })
+                            @* @Html.TextBoxFor(model => model.Institutions, new { @class = "form-control", required = "required",value = "@Model.Institutions" })
+                            <input type="text" class="form-control" id="institution" placeholder="Institution" name="institution" required value="@Model.Institutions">
+                            *@
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col">
+                            <label for="percentage">Percentage</label>
+                            @*<input type="text" class="form-control" id="percentage" placeholder="percentage" name="percentage" required value="@Model.Percentages">*@
+                            @Html.TextBoxFor(model => model.Percentages, new { @class = "form-control", required = "required", value = "@Model.Percentages" })
+                        </div>
+
+                        <div class="col">
+                            <label for="formFileMultiple" class="form-label">Document</label>
+                            <input class="form-control" type="file" name="file" id="formFileMultiple" value="@Model.Document">
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-2">
+                        <div class="col">
+                            <label for="Experience">Experience</label>
+                            <select class="form-control" id="experienceSelect" name="experiences" onchange="toggleExperienceTextBox()" value="@Model.Experience">
+                                <option value="">--Select--</option>
+                                <option value="Experienced" @(Model.Experience != 0 ? "selected" : "")>Experienced</option>
+                                <option value="Fresher" @(Model.Experience == 0 ? "selected" : "")>Fresher</option>
+                            </select>
+                        </div>
+
+                        <div class="col">
+                            <label>Comments</label>
+                            <textarea class="form-control" placeholder="Leave a comment here" name="comments" id="Comments">@Model.Comments</textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col" id="experienceTextBox" style="@(Model.Experience == 0 ? "display:none;" : "")">
+                            <label for="experienceDetails">Experience</label>
+                            <input type="text" class="form-control" id="experienceDetails" name="experienceDetail" value="@Model.Experience" placeholder="How many years experience" />
+                        </div>
+
+                        <div class="col"></div>
+                    </div>
+
+
+                    <div class="row mb-2">
+                        <div class="col">
+                            <div class="form-check">
+                                <label for="isActive">
+                                    IsActive
+                                </label>
+                                @Html.CheckBoxFor(model => model.IsActive, new { @class = "form-check-input", id = "isActive" })
+                                @*<input class="form-check-input" type="checkbox" name="IsActive" id="invalidCheck" value="@Model.IsActive">*@
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <button class="btn btn-success" type="submit" id="addmorebtn" value="Addmore" name="action">Add more</button>
+                    <button class="btn btn-primary" type="submit" name="action">Submit & Back</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+<script>
+    function toggleExperienceTextBox() {
+        var selectElement = document.getElementById("experienceSelect");
+        var textBoxDiv = document.getElementById("experienceTextBox");
+        var experienceInput = document.getElementById("experienceDetails");
+        if (selectElement.value === "Fresher") {
+            textBoxDiv.style.display = "none";
+            experienceInput.value = "0"; // Set the value of the input to 0
+        } else {
+            textBoxDiv.style.display = "block";
+        }
+    }
+</script>
+

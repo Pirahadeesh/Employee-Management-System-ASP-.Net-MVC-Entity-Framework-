@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "GeneralLedgerCreate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+
+    <div class="card-body">
+        <form action="/Finance/GeneralLedgerCreate" method="post">
+
+            <div class="col-md-4 mb-3">
+                <label for="GeneralLedgerCode">GeneralLedger Code</label>
+                <input type="text" id="GeneralLedgerCode" name="GeneralLedgerCode" class="form-control" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="GeneralLedgerName">GeneralLedger Name</label>
+                <input type="text" id="GeneralLedgerName" name="GeneralLedgerName" class="form-control" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <input class="form-check-input" type="checkbox" name="IsActive" id="invalidCheck">
+                <label for="IsActive">IsActive</label>
+            </div>
+
+            <button type="submit" name="action" value="save-and-continue" class="btn btn-success">Save</button>
+        </form>
+
+    </div>
+</div>

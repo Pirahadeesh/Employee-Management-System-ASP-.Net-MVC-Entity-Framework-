@@ -1,0 +1,83 @@
+﻿@model DGHCM.Models.SalaryTypeMaster
+
+@{
+    ViewBag.Title = "EmpSalaryTypeCreate";
+}
+<script src="~/Scripts/bootstrap.bundle.js"></script>
+
+<style>
+    body {
+        background-image: url('../../content/images/office image.png');
+        background-size: cover;
+    }
+
+    .card {
+        background: #fff5;
+        backdrop-filter: blur(3px);
+        border-radius: 20px;
+    }
+
+    .card-header {
+        background: #ffffffa1;
+        border-top-left-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+    }
+
+
+
+    .card-body {
+        background: #fffb;
+        border-bottom-left-radius: 20px !important;
+        border-bottom-right-radius: 20px !important;
+    }
+
+    thead th {
+        background: #d5d1defe;
+    }
+</style>
+
+<form class="needs-validation" name="tcreate" method="post" id="fileForm" @*onsubmit="return validate()"*@ enctype="multipart/form-data">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center">
+                <div class="card-title text-black mb-0 p-0">Salary Type Details</div>
+                <div>
+                    <button class="btn btn-transparent border border-black" type="submit" value="SaveAndSubmit" name="action"><i class="fa-solid fa-floppy-disk"></i><span>&nbsp;Save</span></button>
+                    <a href="~/Employee/EmpSalaryTypeIndex" class="btn btn-transparent border border-black" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Salary Type</span>
+                    <input type="text" class="form-control" id="SalaryType" name="SalaryTypeName" placeholder="enter type" required>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input col-sm-2 " style="float:right;" type="checkbox" id="AllowOrDeduct" name="AllowanceOrDeduction">
+                    </div>
+                    <span class="input-group-text">AllowanceOrDeduction</span>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input col-sm-2" style="float:right;" type="checkbox" id="active" name="IsActive">
+                    </div>
+                    <span class="input-group-text">IsActive</span>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input col-sm-2" style="float: right;" type="checkbox" id="FixedPay" name="IsFixedPay">
+                    </div>
+                    <span class="input-group-text">IsFixedPay</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function validate() {
+        let name = document.forms["tcreate"]["SalaryType"].value;
+        if (name == "")
+            alert("Please enter the name");
+        return false;
+    }
+</script>

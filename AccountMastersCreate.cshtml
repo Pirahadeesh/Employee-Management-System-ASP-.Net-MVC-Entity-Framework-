@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "AccountMastersCreate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+
+    <div class="card-body">
+        <form action="/Finance/AccountMastersCreate" method="post">
+            <div class="col-md-4 mb-3">
+                <label for="AccountName">Account Name</label>
+                <input type="text" id="AccountName" name="AccountName" class="form-control" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="OpeningBalance">Opening Balance</label>
+                <input type="text" id="OpeningBalance" name="AccountBalance" class="form-control" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="AccountType">Account Type</label>
+                <select id="bankOrGeneralLedger" name="AccountType" class="form-control" onchange="setBankOrGeneralLedger()">
+                    <option value="--select--">--select--</option>
+                    <option value="1">Bank</option>
+                    <option value="2">General Ledger</option>
+                </select>
+            </div>
+            
+
+            <div class="col-md-4 mb-3">
+                <input class="form-check-input" type="checkbox" name="IsActive" id="invalidCheck">
+                <label for="IsActive">IsActive</label>
+            </div>
+
+            <button type="submit" name="action" value="save-and-continue" class="btn btn-success">Save</button>
+        </form>
+
+    </div>
+</div>
+<script>
+    function setBankOrGeneralLedger() {
+        var dropdown = document.getElementById("bankOrGeneralLedger");
+        var selectedValue = dropdown.options[dropdown.selectedIndex].value;
+        var field = document.getElementById("bankOrGeneralLedgerField");
+        field.value = selectedValue;
+    }
+</script>

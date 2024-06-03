@@ -1,0 +1,287 @@
+﻿@model DGHCM.ViewModel.DocumentVM
+@{
+    ViewBag.Title = "AddOrEdit";
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins',sans-serif;
+    }
+
+    .body {
+        /*height: 100vh;*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        background: linear-gradient(135deg, #71b7e6, #9b59b6);
+    }
+
+    .container1 {
+        max-width: 700px;
+        background-color: #fff;
+        padding: 25px 30px;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+    }
+
+        .container1 .title {
+            font-size: 25px;
+            font-weight: 500;
+            position: relative;
+        }
+
+            .container1 .title::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                height: 3px;
+                width: 30px;
+                border-radius: 5px;
+                background: linear-gradient(135deg, #71b7e6, #9b59b6);
+            }
+
+    .content form .Document-details {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: 20px 0 12px 0;
+    }
+
+    form .Document-details .form-floating mb-3 {
+        margin-bottom: 15px;
+        width: calc(100% / 2 - 20px);
+    }
+
+    form .Document-details .col-md-4 mb-3 {
+        margin-bottom: 15px;
+        width: calc(100% / 2 - 20px);
+    }
+
+    form .Document-details .input-box {
+        margin-bottom: 15px;
+        width: calc(100% / 2 - 20px);
+    }
+
+    form .input-box span.details {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .Document-details .form-floating mb-3 input {
+        height: 45px;
+        width: 100%;
+        outline: none;
+        font-size: 16px;
+        border-radius: 5px;
+        padding-inline-start: 15px;
+        border: 1px solid #ccc;
+        border-bottom-width: 2px;
+        transition: all 0.3s ease;
+    }
+
+    .Document-details .col-md-4 mb-3 input {
+        height: 45px;
+        width: 100%;
+        outline: none;
+        font-size: 16px;
+        border-radius: 5px;
+        padding-inline-start: 15px;
+        border: 1px solid #ccc;
+        border-bottom-width: 2px;
+        transition: all 0.3s ease;
+    }
+
+    .Document-details .input-box input {
+        height: 45px;
+        width: 100%;
+        outline: none;
+        font-size: 16px;
+        border-radius: 5px;
+        padding-left: 15px;
+        border: 1px solid #ccc;
+        border-bottom-width: 2px;
+        transition: all 0.3s ease;
+    }
+
+        .Document-details .input-box input:focus,
+        .Document-details .input-box input:valid {
+            border-color: #9b59b6;
+        }
+
+    .Document-details.form-floating mb-3 input:focus,
+    .Document-details .form-floating mb-3 input:valid {
+        border-color: #9b59b6;
+    }
+
+    .Document-details .col-md-4 mb-3 input:focus,
+    .Document-details .col-md-4 mb-3 input:valid {
+        border-color: #9b59b6;
+    }
+
+
+    form .CreatedBy .CreatedBy {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    form .CreateDate .CreateDate {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    form .UpdatedBy .UpdatedBy {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    form .UpdatedBy .UpdatedBy {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    form .button {
+        height: 45px;
+        margin: 35px 0
+    }
+
+        form .button input {
+            height: 100%;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        }
+
+            form .button input:hover {
+                /* transform: scale(0.99); */
+                background: linear-gradient(-135deg, #71b7e6, #9b59b6);
+            }
+
+    form .Document-details .form-floating mb-3 {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    form .Document-details .col-md-4 mb-3 {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    form .Document-details .input-box {
+        margin-bottom: 15px;
+        width: 100%;
+        padding-left: 15px;
+    }
+
+    .content form .Document-details {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    .Document-details::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .container1 .content {
+        flex-direction: row-reverse;
+    }
+
+    #label {
+        margin-left: 12px;
+        width: 162px;
+    }
+</style>
+<form  action="~/Employee/AddOrEdit"class="needs-validation" name="dupdate" method="post" id="fileForm" enctype="multipart/form-data" role="form" autocomplete="off">
+    <div class="body">
+        @Html.ValidationSummary(true, "", new {@class="text-danger"})
+        <input id="Emp_id" name="Emp_id" type="hidden" value="0" />
+        <div class="container1">
+            <div class="title">DocumentType</div>
+            <div class="content">
+
+                <div class="Document-details">
+                    <div class="row g-3 align-items-center col-md-6">
+                        <span class="details" value="">Employee Name </span>
+                        @Html.DropDownList("EmployeeList", null, "--select--", htmlAttributes: new { @id = "EmployeeId", @class = "form-control form-select selectpicker" })
+                    </div>
+                    <div class="row g-3 align-items-center col-md-6">
+                        <span class="details">Document Type</span>
+                        @Html.DropDownList("DocumentType", null, "--select--", htmlAttributes: new { @id = "DocumentTypeId", @class = "form-control form-select selectpicker" })
+                    </div>
+                    <div>
+                        <span class="details">Description</span>
+                        <input type="text" class="form-control" id="credit" placeholder="enter description" name="Description" @*value="@Model.Description"*@>
+                    </div>
+                    <div>
+                        <input type="hidden" class="form-control" id="id" placeholder="enter id" name="DocumentId" @*value="@Model.DocumentId"*@>
+                    </div>
+                    <div class=" form-check form-switch  col-md-6" id="isActive">
+                        @if (Model.IsActive == true)
+                        {
+                            <input class="form-check-input" type="checkbox" id="active" name="IsActive" @*value="@Model.IsActive"*@ checked>
+                        }
+                        else
+                        {
+                            <input class="form-check-input" type="checkbox" id="active" name="IsActive"@* value="@Model.IsActive"*@>
+                        }
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Status</label>
+                    </div>
+                    @using (Html.BeginForm("DocumentDetailsCreate", "Upload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div>
+                            @Html.TextBox("file", "", new { type = "file" }) <br />
+                            <input type="submit" value="@Model.DocumentPath" />
+                            @ViewBag.Message
+                        </div>
+                    }
+                </div>
+                <div class="button text-center" type="submit" id="=addmore" name="action" value="Submit">
+                    Add more
+                </div>
+                <div class="button text-center">
+                    <input type="submit" name="action" value="Submit">
+                </div>
+                <div>
+                    @Html.ActionLink("Back to List", "DocumentDetailsIndex")
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+        function validate() {
+            let name = document.forms["dupdate"]["EmployeeName"].value;
+            if (name == "")
+                alert("Please enter the name");
+            return false;
+            let name = document.forms["dupdate"]["DocumentType"].value;
+            if (name == "")
+                alert("Please enter the name");
+            return false;
+            let name = document.forms["dupdate"]["Description"].value;
+            if (name == "")
+                alert("Please enter the name");
+            return false;
+            let name = document.forms["dupdate"]["Choose File/*(Max 300KB)*/"].value;
+            if (name == "")
+                alert("Please enter the name");
+            return false;
+        }
+
+</script>
+
+
+

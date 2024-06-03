@@ -1,0 +1,552 @@
+﻿@model DGHCM.Models.PaymentDetail
+@{
+    ViewBag.Title = "paymentDetailCreate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    form {
+        padding-top: 10px;
+    }
+
+    .add {
+        margin: 10px;
+    }
+
+    .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .details-container {
+        display: block;
+    }
+    textarea{
+        height:17px;
+    }
+    .table {
+        border-radius:8px;
+    }
+    
+</style>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center">
+            <div class="card-title text-black mb-0 p-0">Payment Details</div>
+            <div>
+                <a href="~/Finance/paymentDetailIndex" class="btn btn-transparent" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form id="formCreate1">
+                <div class="details-container">
+                    <input id="HpaymentId" hidden="hidden" name="PaymentDetailsId" />
+                    <div id="disabled">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="BankMaster">From</label>
+                                @Html.DropDownList("BankList", null, "--select--", htmlAttributes: new { @class = "form-control form-select selectpicker" })
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="Date">Date</label>
+                                <input type="date" id="Date" name="Date" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="PaymentMethod">Payment Method</label>
+                                <select id="PaymentMethod" name="PaymentMethod" class="form-control form-select selectpicker">
+                                    <option>--select--</option>
+                                    <option value="1">Cash</option>
+                                    <option value="2">Cheque</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="DebitOrCredit">Debit or Credit</label>
+                                <select id="DebitOrCredit" name="DebitOrCredit" class="form-control form-select selectpicker">
+                                    <option>--select--</option>
+                                    <option value="1">Debit</option>
+                                    <option value="2">Credit</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label for="ReceiptOrPayment">Receipt or Payment</label>
+                                <select id="ReceiptOrPayment" name="ReceiptOrPayment" class="form-control form-select selectpicker">
+                                    <option>--select--</option>
+                                    <option value="1">Receipt</option>
+                                    <option value="2">Payment</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="Document">Upload Document</label>
+                                <input type="file" id="Document" name="file" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="IsActive" id="IsActive">
+                                    <label class="form-check-label" for="IsActive">Is Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-grid justify-content-md-end" style="display:block">
+                        <button type="button" id="savebtn" class="btn btn-success" onclick="savePaymentDetail(event)">Save</button>
+                    </div>
+                </div>
+
+                <div id="Receviertype" style="display:none">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="DetailsType">Receiver Type</label>
+                            <select id="DetailsType" name="DetailsType" onchange="check()" class="form-control form-select selectpicker">
+                                <option>--select--</option>
+                                <option value="1">Customer</option>
+                                <option value="2">Supply</option>
+                                <option value="3">General Ledger</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div id="Default" style="display: block;">
+                                <label for="DetailsType">Types</label>
+                                <select id="DetailsType" class="form-control form-select selectpicker" value="0">
+                                    <option>--select--</option>
+                                </select>
+                            </div>
+
+                            <div id="CustomerDropdown" style="display: none;">
+                                <label for="CustomerDropdown">Customers</label>
+                                @Html.DropDownList("CustomerList", null, "--select--", htmlAttributes: new { @class = "form-control form-select selectpicker" })
+                            </div>
+                            <div id="SupplyDropdown" style="display: none;">
+                                <label for="SupplyDropdown">Supply</label>
+                                @Html.DropDownList("SupplyList", null, "--select--", htmlAttributes: new { @class = "form-control form-select selectpicker" })
+                            </div>
+                            <div id="GLDropdown" style="display: none;">
+                                <label for="GLDropdown">Account Master</label>
+                                @Html.DropDownList("AMList", null, "--select--", htmlAttributes: new { @class = "form-control form-select selectpicker" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cmt" style="display:block">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="Amount_1">Amount</label>
+                                <input type="text" id="Amount" name="Amount" placeholder="amount" class="form-control" value="0">
+                            </div>
+                            <div class="col">
+                                <label for="Comments_1">Comments</label>
+                                <textarea class="form-control" placeholder="Leave a comment here" name="Comments" id="Comments"></textarea>
+                            </div>
+                        </div>
+                        <div class="d-grid justify-content-md-end" id="savebtn2button" style="margin-top: 15px; display:block">
+                            <button type="button" id="savebtn2" class="btn btn-success" onclick="savePaymentDetail(event)">Save</button>
+                            <input type="hidden" id="HRowCount" name="HRowCount" />
+                            <input type="hidden" id="hdnTotalAmnt" name="hdnTotalAmnt" />
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="tables">
+                    <div id="amt" style="display:none">
+                        
+                            <table class="table table-bordered table-striped table-hover mt-2">
+                                <thead class="bg-secondary-light">
+                                    @*table table-bordered*@
+                                    <tr align="center">
+
+                                        <th scope="col">Amount</th>
+                                        <th scope="col">Comments</th>
+                                        <th scope="col">
+                                            Action &nbsp;<i class="fas fa-plus" onclick="addEntryField(event)"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="entryTableBody">
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text" id="Amount_1" name="glAmount_1" placeholder="Amount" class="form-control">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <textarea class="form-control" placeholder="Leave a comment here" name="glComments_1" id="Comments_1"></textarea>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-success not" id="savebtn" onclick="saveEntry(1, event)"><i class="fas fa-save"></i></button>
+                                            <button type="button" class="btn btn-danger" id="deletebtn" onclick="deleteEntry(1)"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td><strong>Total: <span id="totalAmount" name="totalAmount">0</span></strong></td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var totalGLAmount = ('totalAmount').val;
+    /*$("#hdnTotalAmnt").val(totalAmount);
+    totalAmount.append('totalAmount', totalGLAmount.value);*/
+
+    //sum
+    // Calculate total taking debit/credit into account
+    function calculateTotal() {
+        var totalAmount = 0;
+        var amounts = document.querySelectorAll('input[name^="glAmount_"]');
+        amounts.forEach(function (amountInput) {
+            var row = amountInput.closest('tr');
+            var debitOrCreditSelect = row.querySelector('select[name^="DebitOrCredit_"]');
+            var amountValue = parseFloat(amountInput.value);
+
+            if (!isNaN(amountValue)) {
+                if (debitOrCreditSelect && debitOrCreditSelect.value == '1') { // Debit
+                    totalAmount -= amountValue;
+                    $("#hdnTotalAmnt").val(totalAmount);
+                    totalAmount.append('totalAmount', totalAmount);
+                } else {
+                    totalAmount += amountValue;
+                }
+            }
+        });
+        $("#hdnTotalAmnt").val(totalAmount);
+        document.getElementById('totalAmount').innerText = totalAmount.toFixed(2);
+        var amount = document.getElementById('totalAmount');
+        var formData = new FormData(document.querySelector('form'));
+        formData.append('totalAmount', amount.value);
+    }
+
+
+    //shrink
+    function toggleDetails() {
+        var detailsContainer = document.querySelector('.details-container');
+        $(detailsContainer).hide();
+    }
+
+    /* CSG DROPDOWN*/
+    document.getElementById('DetailsType').addEventListener('change', function () {
+        var CustomerDropdown = document.getElementById('CustomerDropdown');
+        var SupplyDropdown = document.getElementById('SupplyDropdown');
+        var GLDropdown = document.getElementById('GLDropdown');
+        var Default = document.getElementById('Default');
+        if (this.value == '1') {
+            CustomerDropdown.style.display = 'block';
+            SupplyDropdown.style.display = 'none';
+            GLDropdown.style.display = 'none';
+            Default.style.display = 'none';
+        } else if (this.value == '2') {
+            CustomerDropdown.style.display = 'none';
+            SupplyDropdown.style.display = 'block';
+            GLDropdown.style.display = 'none';
+            Default.style.display = 'none';
+        } else if (this.value == '3') {
+            CustomerDropdown.style.display = 'none';
+            SupplyDropdown.style.display = 'none';
+            GLDropdown.style.display = 'block';
+            Default.style.display = 'none';
+        } else {
+
+            CustomerDropdown.style.display = 'none';
+            SupplyDropdown.style.display = 'none';
+            GLDropdown.style.display = 'none';
+            Default.style.display = 'block';
+        }
+    });
+
+    //MULTIPLE SHOW
+    function check() {
+        var select = document.getElementById("DetailsType");
+        var GLamt = document.getElementById("amt");
+        var cmt = document.getElementById("cmt");
+        var savebtn2button = document.getElementById("savebtn2button");
+        if (select.value == '3') {
+            GLamt.style.display = 'block';
+            cmt.style.display = 'none';
+            savebtn2button.style.display = 'none';
+        } else if (select.value == '1' || select.value == '2') {
+            GLamt.style.display = 'none';
+            cmt.style.display = 'block';
+            savebtn2button.style.display = 'block';
+        }
+        else {
+            GLamt.style.display = 'none';
+            cmt.style.display = 'block';
+        }
+    }
+
+    //ADD MULTIPLE ENTRYS
+    function addEntryField(event) {
+        // Get the current number of rows in the table
+        var rowCount = document.querySelectorAll('#entryTableBody tr').length + 1;
+        $('#HRowCount').val(rowCount);
+
+        // Create a new row
+        var newRow = document.createElement('tr');
+
+        // Amount input field
+        var amountCell = document.createElement('td');
+        var amountInput = document.createElement('input');
+        amountInput.type = 'text';
+        amountInput.name = 'glAmount_' + rowCount;
+        amountInput.placeholder = 'amount';
+        amountInput.className = 'form-control';
+        amountCell.appendChild(amountInput);
+        newRow.appendChild(amountCell);
+
+        // Comments textarea
+        var commentsCell = document.createElement('td');
+        var commentsTextarea = document.createElement('textarea');
+        commentsTextarea.className = 'form-control';
+        commentsTextarea.placeholder = 'Leave a comment here';
+        commentsTextarea.name = 'glComments_' + rowCount;
+        commentsTextarea.id = 'Comments_' + rowCount;
+        commentsCell.appendChild(commentsTextarea);
+        newRow.appendChild(commentsCell);
+
+        // Action buttons cell
+        var actionCell = document.createElement('td');
+        var saveButton = document.createElement('button');
+        saveButton.type = 'button';
+        saveButton.id = 'savebtn_' + rowCount;
+        saveButton.className = 'btn btn-success';
+        saveButton.innerHTML = '<i class="fas fa-save"></i>';
+        saveButton.onclick = function () { saveEntry(rowCount, event) };
+        saveButton.style.marginRight = "1px";
+
+        var deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'btn btn-danger';
+        deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteButton.onclick = function () { deleteEntry(rowCount) };
+
+        actionCell.appendChild(saveButton);
+        actionCell.appendChild(deleteButton);
+        newRow.appendChild(actionCell);
+
+        // Append the new row to the table body
+        var tableBody = document.getElementById('entryTableBody');
+        tableBody.appendChild(newRow);
+    }
+
+
+    //GL save
+    function saveEntry(rowNumber, event) {
+
+
+        var amountValue = document.querySelector('input[name="glAmount_' + rowNumber + '"]').value;
+        var commentsValue = document.querySelector('textarea[name="glComments_' + rowNumber + '"]').value;
+        var totAmnt = document.getElementById("hdnTotalAmnt");
+        var formData = new FormData(document.querySelector('form'));
+
+        formData.append('glAmount', amountValue.value);
+        formData.append('glComments', commentsValue.value);
+
+        // sum
+        calculateTotal();
+        // Your save logic here
+        $('#HRowCount').val(rowNumber);
+        // Hide paymentdetails
+        toggleDetails();
+
+
+        savePaymentDetail(event);
+
+        var buttonGroup = event.target.parentElement;
+        var saveButton = buttonGroup.querySelector('.btn-success');
+        var deleteButton = buttonGroup.querySelector('.btn-danger');
+
+        $(document).ready(function () {
+            $(saveButton).hide();
+            $(deleteButton).show();
+
+        });
+      /* var buttondel= document.getElementsByClassName('.btn-danger')
+        buttondel.style.display = 'inline-block';*/
+        document.addEventListener('DOMContentLoaded', function () {
+            var deleteButton = document.getElementById('deleteButton');
+            if (deleteButton) {
+                deleteButton.style.display = 'inline-block';
+            } else {
+                console.error('deleteButton element not found');
+            }
+        });
+
+    }
+
+    function deleteEntry(rowNumber) {
+        UpdateTotal();
+
+        var rowToDelete = document.querySelector('#entryTableBody tr:nth-child(' + rowNumber + ')');
+        rowToDelete.remove();
+        calculateTotal();
+        toggleDetails();
+        /*savePaymentDetail(event);*/
+    }
+
+    // Function to delete an entry and update the total amount
+   /* function deleteEntry(rowNumber) {
+        // Remove the row from the table
+        var rowToDelete = document.querySelector('#entryTableBody tr:nth-child(' + rowNumber + ')');
+        if (rowToDelete) {
+            rowToDelete.remove();
+        }
+
+        // Calculate total amount after deletion
+        var totalAmount = 0;
+        var amounts = document.querySelectorAll('input[name^="glAmount_"]');
+        amounts.forEach(function (amountInput) {
+            var row = amountInput.closest('tr');
+            var debitOrCreditSelect = row.querySelector('select[name^="DebitOrCredit_"]');
+            var amountValue = parseFloat(amountInput.value);
+
+            if (!isNaN(amountValue)) {
+                if (debitOrCreditSelect && debitOrCreditSelect.value == '1') { // Debit
+                    totalAmount -= amountValue;
+                } else { // Credit
+                    totalAmount += amountValue;
+                }
+            }
+        });
+
+        // Update the total amount in the hidden field and display it
+        document.getElementById('hdnTotalAmnt').value = totalAmount.toFixed(2);
+        document.getElementById('totalAmount').innerText = totalAmount.toFixed(2);
+
+        // Send the updated total amount to the server via AJAX
+        var formData = new FormData();
+        formData.append('totalAmount', totalAmount.toFixed(2));
+
+        $.ajax({
+            type: "POST",
+            data: formData,
+            url: "paymentDetailCreate",
+            enctype: 'multipart/form-data',
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (result) {
+                var totAmount = result;
+                $("#totalAmount").val(totAmount);
+                toastr.success('Total amount updated successfully', { timeOut: 3000 });
+            },
+            error: function () {
+                toastr.error('Error updating total amount', { timeOut: 3000 });
+            }
+        });
+    }
+
+    // Event listener for the delete buttons to ensure the proper row number is passed
+    document.querySelectorAll('.btn-danger').forEach(function (deleteButton, index) {
+        deleteButton.addEventListener('click', function () {
+            deleteEntry(index + 1);
+        });
+    });*/
+
+    function handlePaymentDetailSaveSuccess() {
+        // Show the hidden div containing your code
+        $('#Receviertype').show();
+    }
+
+    //SAVE BUTTON PAYMENT
+    function savePaymentDetail(event) {
+        event.preventDefault();
+
+        var formData = new FormData($("#formCreate1")[0]);
+        var amounts = document.getElementsByName('glAmount');
+        var comments = document.getElementsByName('glComments');
+
+        for (var i = 0; i < amounts.length; i++) {
+            formData.append('glAmount[]', amounts[i].value);
+            formData.append('glComments[]', comments[i].value);
+        }
+
+        // Append the total amount to the form data
+        var totalAmount = document.getElementById('hdnTotalAmnt').value;
+        formData.append('totalAmount', totalAmount);
+
+
+        $.ajax({
+            type: "POST",
+            data: formData,
+            url: "paymentDetailCreate",
+            enctype: 'multipart/form-data',
+            contentType: false,
+            processData: false,
+            dataType: "Json",
+            success: function (result) {
+                //success
+                toastr.success(result.message, 'Success Alert', { timeOut: 3000 });
+                // HiddenId
+                var HiddenId = result;
+                $('#HpaymentId').val(HiddenId)
+
+                var totamount = result;
+                $("#totalAmount").val(totamount);
+
+                // Hide save button
+                $('#savebtn').hide();
+                $('#savebtn2').show();
+
+                // Redirect to Index
+                var selectedOption = $('#DetailsType').val();
+                if (selectedOption === '1' || selectedOption === '2') {
+                    window.location.href = '/Finance/paymentDetailIndex';
+                } else {
+                    handlePaymentDetailSaveSuccess();
+                }
+
+                //Disable
+                var disabledElement = document.getElementById("disabled");
+                disabledElement.classList.add("disabled");
+                if (selectedOption === '3') {
+                    var disabledGL = document.getElementById("DetailsType");
+                    disabledGL.classList.add("disabled");
+
+
+
+                    document.addEventListener('DOMContentLoaded', function () {
+                        calculateTotal();
+                    });
+
+
+                }
+            },
+            error: function () {
+                //error
+                toastr.success(result.message, 'Error Alert', { timeOut: 3000 });
+
+            }
+        }
+        );
+    }
+</script>
+
+

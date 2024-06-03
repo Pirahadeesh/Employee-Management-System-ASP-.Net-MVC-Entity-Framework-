@@ -1,0 +1,355 @@
+﻿@model List<DGHCM.ViewModel.FinanceVM>
+
+@{
+    ViewBag.Title = "paymentDetailEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    form {
+        padding-top: 10px;
+    }
+
+    .add {
+        margin: 10px;
+    }
+
+    .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .details-container {
+        display: block;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header text-black d-flex flex-wrap justify-content-between align-items-center">
+            <div class="card-title text-black mb-0 p-0">Edit Payment Details</div>
+            <div>
+                <a href="@Url.Action("paymentDetailIndex", "Finance")" class="btn btn-transparent border border-black"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+            </div>
+        </div>
+
+        @foreach (var item in Model)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <form id="formEdit_@item.PaymentDetailsId">
+                        <div class="details-container">
+                            @Html.HiddenFor(modelItem => item.PaymentDetailsId)
+                            <div id="disabled">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="BankMaster">From</label>
+                                        @Html.DropDownListFor(modelItem => item.BankId, (SelectList)ViewBag.BankList, "--select--", new { @class = "form-control form-select selectpicker" })
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="Date">Date</label>
+                                        @Html.TextBoxFor(modelItem => item.Date, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="PaymentMethod">Payment Method</label>
+                                        @Html.DropDownListFor(modelItem => item.CashOrCheck, new SelectList(new[] {
+                                            new { Value = "1", Text = "Cash" },
+                                            new { Value = "2", Text = "Cheque" }
+                                        }, "Value", "Text"), "--select--", new { @class = "form-control form-select selectpicker" })
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="DebitOrCredit">Debit or Credit</label>
+                                        @Html.DropDownListFor(modelItem => item.DebitOrCredit, new SelectList(new[] {
+                                            new { Value = "1", Text = "Debit" },
+                                            new { Value = "2", Text = "Credit" }
+                                        }, "Value", "Text"), "--select--", new { @class = "form-control form-select selectpicker" })
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="ReceiptOrPayment">Receipt or Payment</label>
+                                        @Html.DropDownListFor(modelItem => item.ReciptOrPayment, new SelectList(new[] {
+                                            new { Value = "1", Text = "Receipt" },
+                                            new { Value = "2", Text = "Payment" }
+                                        }, "Value", "Text"), "--select--", new { @class = "form-control form-select selectpicker" })
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="Document">Upload Document</label>
+                                        <input type="file" id="Document" name="file" class="form-control">
+                                        @if (!string.IsNullOrEmpty(item.UploadDocument))
+                                        {
+                                            <a href="@Url.Content(item.UploadDocument)" target="_blank">View current document</a>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check">
+                                            @Html.CheckBoxFor(modelItem => item.IsActive, new { @class = "form-check-input" })
+                                            <label class="form-check-label" for="IsActive">Is Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid justify-content-md-end" style="display:block">
+                                <button type="button" id="savebtn" class="btn btn-success" onclick="savePaymentDetail(@item.PaymentDetailsId, event)">Save</button>
+                            </div>
+                        </div>
+
+                        <div id="Receviertype" style="display:none">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="DetailsType">Receiver Type</label>
+                                    @Html.DropDownListFor(modelItem => item.DetailsType, new SelectList(new[] {
+                                        new { Value = "1", Text = "Customer" },
+                                        new { Value = "2", Text = "Supply" },
+                                        new { Value = "3", Text = "General Ledger" }
+                                    }, "Value", "Text"), "--select--", new { @class = "form-control form-select selectpicker", @onclick = "check()" })
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div id="Default" style="display: block;">
+                                        <label for="DetailsType">Types</label>
+                                        <select id="DetailsType" class="form-control form-select selectpicker" value="0">
+                                            <option>--select--</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="CustomerDropdown" style="display: none;">
+                                        <label for="CustomerDropdown">Customers</label>
+                                        @Html.DropDownList("CustomerList", null, "--select--", htmlAttributes: new { @class = "form-control form-select selectpicker" })
+                                    </div>
+                                    <div id="SupplyDropdown" style="display: none;">
+                                        <label for="SupplyDropdown">Supply</label>
+                                        @Html.DropDownList("SupplyList", null, "--select--", htmlAttributes: new { @class = "form-control form-select selectpicker" })
+                                    </div>
+                                    <div id="GLDropdown" style="display: none;">
+                                        <label for="GLDropdown">Account Master</label>
+                                        @Html.DropDownList("AMList", null, "--select--", htmlAttributes: new { @class = "form-control form-select selectpicker" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="cmt" style="display:block">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="Amount_1">Amount</label>
+                                        @Html.TextBoxFor(modelItem => item.Amount, new { @class = "form-control", @placeholder = "amount" })
+                                    </div>
+                                    <div class="col">
+                                        <label for="Comments_1">Comments</label>
+                                        @Html.TextAreaFor(modelItem => item.Comments, new { @class = "form-control", @placeholder = "Leave a comment here" })
+                                    </div>
+                                </div>
+                                <div class="d-grid justify-content-md-end" id="savebtn2button" style="margin-top: 15px; display:block">
+                                    <button type="button" id="savebtn2" class="btn btn-success" onclick="savePaymentDetail(@item.PaymentDetailsId, event)">Save</button>
+                                    @Html.Hidden("HRowCount", 0)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tables">
+                            <div id="amt" style="display:none">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Amount</th>
+                                            <th>Comments</th>
+                                            <th>
+                                                Action &nbsp;<i class="fas fa-plus" onclick="addEntryField()"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="entryTableBody">
+                                        <tr>
+                                            <td>
+                                                <div class="input-group">
+                                                    <input type="text" id="Amount_1" name="glAmount_1" placeholder="Amount" class="form-control">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <textarea class="form-control" placeholder="Leave a comment here" name="glComments_1" id="Comments_1"></textarea>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-success" id="savebtn" onclick="saveEntry(1, event)"><i class="fas fa-save"></i></button>
+                                                <button type="button" class="btn btn-danger" onclick="deleteEntry(1)"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function toggleDetails() {
+        var detailsContainer = document.querySelector('.details-container');
+        detailsContainer.style.display === 'none' ? detailsContainer.style.display = 'block' : detailsContainer.style.display = 'none';
+    }
+
+    /* CSG DROPDOWN*/
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('DetailsType').addEventListener('change', function () {
+            var CustomerDropdown = document.getElementById('CustomerDropdown');
+            var SupplyDropdown = document.getElementById('SupplyDropdown');
+            var GLDropdown = document.getElementById('GLDropdown');
+            var Default = document.getElementById('Default');
+            if (this.value == '1') {
+                CustomerDropdown.style.display = 'block';
+                SupplyDropdown.style.display = 'none';
+                GLDropdown.style.display = 'none';
+                Default.style.display = 'none';
+            } else if (this.value == '2') {
+                CustomerDropdown.style.display = 'none';
+                SupplyDropdown.style.display = 'block';
+                GLDropdown.style.display = 'none';
+                Default.style.display = 'none';
+            } else if (this.value == '3') {
+                CustomerDropdown.style.display = 'none';
+                SupplyDropdown.style.display = 'none';
+                GLDropdown.style.display = 'block';
+                Default.style.display = 'none';
+            } else {
+                CustomerDropdown.style.display = 'none';
+                SupplyDropdown.style.display = 'none';
+                GLDropdown.style.display = 'none';
+                Default.style.display = 'block';
+            }
+        });
+    });
+
+    //MULTIPLE SHOW
+    function check() {
+        var select = document.getElementById("DetailsType");
+        var GLamt = document.getElementById("amt");
+        var cmt = document.getElementById("cmt");
+        var savebtn2button = document.getElementById("savebtn2button");
+        if (select.value == '3') {
+            GLamt.style.display = 'block';
+            cmt.style.display = 'none';
+            savebtn2button.style.display = 'none';
+        } else if (select.value == '1' || select.value == '2') {
+            GLamt.style.display = 'none';
+            cmt.style.display = 'block';
+            savebtn2button.style.display = 'block';
+        }
+        else {
+            GLamt.style.display = 'none';
+            cmt.style.display = 'block';
+        }
+    }
+
+    //ADD MULTIPLE ENTRYS
+    function saveEntry(rowNumber, event) {
+        var amountValue = document.querySelector('input[name="glAmount_' + rowNumber + '"]').value;
+        var commentsValue = document.querySelector('textarea[name="glComments_' + rowNumber + '"]').value;
+        var formData = new FormData(document.querySelector('form'));
+        formData.append('glAmount', amountValue.value);
+        formData.append('glComments', commentsValue.value);
+
+        // Hide paymentdetails
+        toggleDetails();
+
+        // Your save logic here
+        $('#HRowCount').val(rowNumber);
+        savePaymentDetail(event);
+        var buttonGroup = event.target.parentElement;
+        var saveButton = buttonGroup.querySelector('.btn-success');
+        var deleteButton = buttonGroup.querySelector('.btn-danger');
+        $(document).ready(function () {
+            $(saveButton).hide();
+        });
+
+        deleteButton.style.display = 'inline-block';
+    }
+
+    function deleteEntry(rowNumber) {
+        var rowToDelete = document.querySelector('#entryTableBody tr:nth-child(' + rowNumber + ')');
+        rowToDelete.remove();
+    }
+
+    // Function to enable editing of a row
+    /*function editEntry() {
+        var row = this.closest('tr');
+        var inputs = row.querySelectorAll('input, textarea');
+        inputs.forEach(function (input) {
+            input.removeAttribute('disabled');
+        });
+    }*/
+
+    function handlePaymentDetailSaveSuccess() {
+        // Show the hidden div containing your code
+        $('#Receviertype').show();
+    }
+
+    //SAVE BUTTON PAYMENT
+    function savePaymentDetail(paymentDetailsId, event) {
+        event.preventDefault();
+
+        var formId = "formEdit_" + paymentDetailsId;
+        var formData = new FormData(document.getElementById(formId));
+        var amounts = document.getElementsByName('glAmount');
+        var comments = document.getElementsByName('glComments');
+
+        for (var i = 0; i < amounts.length; i++) {
+            formData.append('glAmount[]', amounts[i].value);
+            formData.append('glComments[]', comments[i].value);
+        }
+
+        $.ajax({
+            type: "POST",
+            data: formData,
+            url: "@Url.Action("paymentDetailCreate", "Finance")",
+            enctype: 'multipart/form-data',
+            contentType: false,
+            processData: false,
+            dataType: "Json",
+            success: function (result) {
+                //success
+                alert('Saved successfully.');
+
+                // HiddenId
+                var HiddenId = result;
+                $('#HpaymentId').val(HiddenId)
+                var a = $("#HpaymentId").val();
+
+                // Hide save button
+                $('#savebtn').hide();
+                $('#savebtn2').show();
+
+                // Redirect to Index
+                var selectedOption = $('#DetailsType').val();
+                if (selectedOption === '1' || selectedOption === '2') {
+                    window.location.href = '/Finance/paymentDetailIndex';
+                } else {
+                    handlePaymentDetailSaveSuccess();
+                }
+
+                //Disable
+                var disabledElement = document.getElementById("disabled");
+                disabledElement.classList.add("disabled");
+                if (selectedOption === '3') {
+                    var disabledGL = document.getElementById("DetailsType");
+                    disabledGL.classList.add("disabled");
+                }
+            },
+            error: function () {
+                //error
+                alert('An error occurred while saving the data.');
+            }
+        });
+    }
+</script>

@@ -1,0 +1,37 @@
+﻿@model DGHCM.Models.GeneralLedgerDetail
+@{
+    ViewBag.Title = "GeneralLedgerEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("GeneralLedgerEdit", "Finance", FormMethod.Post))
+        {
+            @Html.HiddenFor(model => model.GeneralLedgerDetailsId)
+
+            <div class="col-md-4 mb-3">
+                <label for="GeneralLedgerCode">GeneralLedger Code</label>
+                @Html.TextBoxFor(model => model.GeneralLedgerCode, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.GeneralLedgerCode)
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="SupplyName">GeneralLedger Name</label>
+                @Html.TextBoxFor(model => model.GeneralLedgerName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.GeneralLedgerName)
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>
+                    @Html.CheckBoxFor(model => model.IsActive, new { @class = "form-check-input", id = "IsActive" })
+                    IsActive
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-success">Save</button>
+        }
+    </div>
+</div>
+
+
+

@@ -1,0 +1,35 @@
+﻿@model DGHCM.Models.SupplyDetail
+@{
+    ViewBag.Title = "SupplyEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("SupplyEdit", "Finance", FormMethod.Post))
+        {
+            @Html.HiddenFor(model => model.SupplyDetailsId)
+
+            <div class="col-md-4 mb-3">
+                <label for="SupplyCode">Supply Code</label>
+                @Html.TextBoxFor(model => model.FinanceSupplyCode, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FinanceSupplyCode)
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="SupplyName">Supply Name</label>
+                @Html.TextBoxFor(model => model.FinanceSupplyName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FinanceSupplyName)
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>
+                    @Html.CheckBoxFor(model => model.IsActive, new { @class = "form-check-input", id = "IsActive" })
+                    IsActive
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-success">Save</button>
+        }
+    </div>
+</div>
+

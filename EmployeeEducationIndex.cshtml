@@ -1,0 +1,234 @@
+﻿
+@model List<DGHCM.Models.EmployeeEducation>
+@{
+    ViewBag.Title = "EmployeeEducationIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .popup-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+    }
+
+
+    body {
+        background-image: url('../../content/images/office image.png');
+        background-size: cover;
+    }
+
+    .card {
+        background: #fff5;
+        backdrop-filter: blur(7px);
+        border-radius: 50%
+    }
+
+    .card-header {
+        background: #ffffffa1;
+    }
+
+
+
+    .card-body {
+        background: #fffb;
+    }
+
+    thead th {
+        background: #d5d1defe;
+    }
+</style>
+<div class="container">
+    <div class="card">
+        <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center">
+
+            <div class="card-title text-black mb-0 p-0">Education Details</div>
+            <div>
+                @*<i class="fa-solid fa-user-plus fa-xl"></i>*@
+                <a href="~/Employee/EmployeeEducationCreate" class="btn btn-transparent" data-toggle="modal"><i class="fa-solid fa-circle-plus fa-lg"></i><span>Add New</span></a>
+            </div>
+        </div>
+
+        <div class="card-body ">
+            <div class="container">
+                <form class="main" name="Display">
+
+
+                    @if (Model != null && Model.Count > 0)
+                    {
+        <table class="table table-bordered table-striped table-hover mt-2">
+            <thead class="bg-secondary-light">
+                <tr align="center">
+                    <th scope="col">S No</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">Institution</th>
+                    <th scope="col">Document</th>
+                    <th scope="col">Is Active</th>
+                    <th colspan="2">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int i = 1;}
+                @foreach (var dr in Model)
+                {
+
+ <tr align="center">
+    <td>@i</td>
+    <td hidden="hidden">@dr.EducationId</td>
+    <td align="left">@dr.CourseName</td>
+    <td align="left">@dr.Institutions</td>
+    @*<td>
+            <i src="@dr.Document" class="fa-solid fa-folder" style="color: #FFD43B;"></i>
+        </td>*@
+    <td>
+        <i src="@dr.Document" id="documentIcon" class="fa-solid fa-folder" style="color: #FFD43B; cursor: pointer;"></i>
+    </td>
+
+
+    <td>
+        @if (dr.IsActive == true)
+        {
+<i class="fa-regular fa-circle-check fa-lg text-success"></i>}
+else
+{
+<i class="fa-regular fa-circle-xmark  fa-lg text-danger"></i>}
+    </td>
+
+    <td>
+
+        <a href="@Url.Action("EmployeeEducationEdit", "Employee", new { Id = dr.EducationId })"><i class="fa fa-edit text-primary fa-lg"></i></a>
+        |
+        <a href="#" onclick="ConfirmDelete(@dr.EducationId)"><i class="fa fa-trash text-danger fa-lg"></i></a>
+
+    </td>
+</tr>
+i++;
+}
+            </tbody>
+        </table>
+    }
+    else
+    {
+<span> No records found!!</span>
+}
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-blur fade" id="myModal1">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-between align-items-center">
+
+                <h5 class="modal-title">Delete Education</h5>
+                <a href="~/Employee/EmployeeEducationIndex" class="close pull-right" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body text-center">
+                <h4>Are you sure? </h4>
+                <p>You want to delete this.</p>
+                <div style="text-align:center;display:none" id="loaderDiv" ;></div>
+            </div>
+            <div class="modal-footer">
+                <a href="~/Employee/EmployeeEducationIndex" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                <a href="#" class="btn btn-success" onclick="DeleteEducation()">Confirm</a>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hiddenEducationDetailsId" />
+</div>
+
+<!-- Popup -->
+    <
+<!--div class="popup" id="popup">
+   <div class="popup-content">-->
+<!-- Document Content Goes Here -->
+<!--<iframe src="" frameborder="0"></iframe>
+    </div>
+</div>-->
+@*  <div>
+        @Html.ActionLink("Add New", "EmployeeEducationCreate", "Employee", new { @class = "btn btn-primary btn  btn-block" })
+    </div>
+*@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const documentIcon = document.getElementById("documentIcon");
+        const popup = document.getElementById("popup");
+
+        documentIcon.addEventListener("click", function () {
+            popup.style.display = "block";
+        });
+    });
+
+    document.getElementById("documentIcon").addEventListener("click", function () {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Assuming the response contains the URL of the document
+                var documentUrl = xhr.responseText;
+                // Open the document in a new tab
+                window.open(documentUrl, "_blank");
+            }
+        };
+        xhr.open("GET", "uploadedfiles/your_document_filename.ext", true); // Change the filename and extension accordingly
+        xhr.send();
+    });
+
+    var ConfirmDelete = function (EducationId) {
+        $("#hiddenEducationDetailsId").val(EducationId);
+        $("#myModal1").modal("show");
+    }
+    function DeleteEducation() {
+        $("#loaderDiv").show();
+        var EduId = $("#hiddenEducationDetailsId").val();
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ EducationId: EduId }),
+            url: "EducationDelete",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#loaderDiv").hide();
+                $("#myModal1").modal("hide");
+                $("#row_" + EduId).remove();
+                window.location.reload();
+            }
+        })
+    }
+
+
+</script>
+
+<!-- Document Icon -->
+@*<div class="document-icon" id="documentIcon">
+        <img src="document-icon.png" alt="Document Icon">
+    </div>*@
+
+
+
+
+
+
+

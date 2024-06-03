@@ -1,0 +1,94 @@
+﻿
+@model DGHCM.Models.UserDetail
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .field-icon {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+</style>
+
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center">
+            <div class="card-title text-black mb-0 p-0"> User Create</div>
+
+            <div>
+                <a href="#" class="btn btn-transparent" data-toggle="modal"><i class="fa-solid fa-circle-plus"></i><span> Save </span></a>
+                <a href="~/Login/UserIndex" class="btn btn-transparent" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+            </div>
+
+        </div>
+
+        <form class="card-body" method="post">
+            <br />
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="UserName">User Name</label>
+                    <input type="text" class="user form-control" id="Username" name="Username" required />
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="password-field" class="col-md-4 control-label">Password</label>
+                    <div class="position-relative">
+                        <input id="password-field" type="password" class="form-control" name="password">
+                        <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="Email">Email</label>
+                    <input type="text" class="user form-control" id="Email" name="Email" required />
+                </div>
+
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="isactive" id="isactive">
+                <label class="form-check-label">
+                    Is Active
+                </label>
+            </div>
+            <br />
+
+
+            <div class="form-row">
+                <input type="submit" value="save" name="buttonClicked" class="btn btn-primary" />
+
+            </div>
+        </form>
+        </div>
+    </div>
+<script src="Scripts/jquery-1.10.2.min.js"></script>
+<script src="http://ajax.microsoft.com/ajax/jquery/jquery-1.10.2.jss" type="text/javascript"></script>
+<script>
+
+    $(".toggle-password").click(function() {
+
+  $(this).toggleClass("fa-eye fa-eye-slash");
+  var input = $($(this).attr("toggle"));
+  if (input.attr("type") == "password") {
+    input.attr("type", "text");
+  } else {
+    input.attr("type", "password");
+  }
+    });
+
+</script>
+
+

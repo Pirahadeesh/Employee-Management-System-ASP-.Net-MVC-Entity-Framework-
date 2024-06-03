@@ -1,0 +1,129 @@
+﻿@model DGHCM.Models.UserDetail
+
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+   
+    <title>Login </title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        * {
+            font-family: Arial;
+        }
+
+        body {
+            background: rgb(2,0,36);
+            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(2,51,89,1) 26%, rgba(0,211,255,1) 89%);
+        }
+
+        .card {
+            max-height: 800px;
+            margin-top: 100px;
+        }
+
+
+
+        .form-field {
+            align-content: start;
+        }
+         .field-icon {
+     float: right;
+     margin-left: -25px;
+     margin-top: -25px;
+     position: relative;
+     z-index: 2;
+ }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="card-body text-primary">
+
+                    <div class="row">
+                        <div class="col-6 d-flex justify-content-center">
+                            <img src="~/Content/Images/company-logo2.png" style="height:400px" />
+                        </div>
+                        <div class="col-6 border border-secondary">
+                            <div class="wapper mt-5 ">
+                                <h1 class="text-center"> Welcome To Digifrontal </h1>
+                                <br />
+                                <form method="post" action="@Url.Action("Login","Login")">
+
+                                    <div class="col-6 mx-auto">
+                                        <div class="form-field">
+                                            <div class="col-xs-4 mb-3 mt-1 ">
+                                                <i class="fa-solid fa-user"></i>
+
+                                                <label class="mb-2" for="username">User Name</label>
+                                                <input type="text" class="user form-control" id="username" name="username" autocomplete="off" required />
+
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="col-xs-4 mb-3 mt-1">
+                                                <i class="fa-solid fa-lock"></i>
+
+                                                <label class="col-md-4 control-label">Password</label>
+                                                <input id="password-field" type="password" class="form-control" name="Userpassword" required>
+
+                                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-Userpassword"></span>
+
+
+                                                @if (ViewBag.Mess != null)
+                                                {
+                                                    <span class="alert alert-danger d-flex align-items-center" role="alert">
+                                                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill" /></svg>
+                                                        <span>
+                                                            Invalid User Name or password!
+                                                        </span>
+                                                    </span>}
+                                            </div>
+                                        </div>
+
+                                        <br />
+                                        <div class="button">
+                                            <div class="col-xs-4 mb-3">
+                                                <input class="btn btn-primary w-100" type="submit" value="LOGIN" name="action" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script>
+        $(".toggle-Userpassword").click(function () {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "Userpassword") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "Userpassword");
+            }
+        });
+    </script>
+
+</body>
+</html>
+   

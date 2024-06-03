@@ -1,0 +1,39 @@
+﻿@model DGHCM.Models.FinanceBankMaster
+@{
+    ViewBag.Title = "FinanceBankMasterEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+
+    <div class="card-body">
+        <form action="/Finance/FinanceBankMasterEdit" method="post" novalidate>
+
+            <input type="hidden" name="BankId" value="@Model.BankId" />
+
+            <div class="col-md-4 mb-3">
+                <label for="BankName">BankName Name</label>
+                <input type="text" id="BankName" name="BankName" value="@Model.BankName" class="form-control" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+
+                <input type="checkbox" id="IsActive" name="IsActive" @(Model.IsActive ? "checked" : "") onchange="isActive()" />
+                <label for="IsActive">IsActive</label>
+            </div>
+
+            <button type="submit" name="action" class="btn btn-success">Save</button>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    function isActive() {
+        var checkbox = document.getElementById("IsActive");
+        if (checkbox.checked) {
+            checkbox.value = "true";
+        } else {
+            checkbox.value = "false";
+        }
+    }
+</script>

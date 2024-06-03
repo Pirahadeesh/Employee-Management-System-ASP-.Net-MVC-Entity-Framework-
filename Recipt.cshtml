@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewBag.Title = "Recipt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Receipt";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; /* Smokey white */
+        }
+
+        .receipt {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff; /* Ensures the receipt itself has a white background */
+        }
+
+        header {
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-info,
+        .payment-details,
+        .narration,
+        .amount-in-words,
+        .signatures {
+            margin-bottom: 20px;
+        }
+
+        .info-block {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .payment-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .payment-details th,
+        .payment-details td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .narration p,
+        .amount-in-words p {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+            .signatures div {
+                width: 24%;
+                border-top: 1px solid #000;
+                padding-top: 10px;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="receipt">
+        <header>
+            <img src="path/to/logo.png" alt="Company Logo" class="logo">
+            <h1>Cash Receipt</h1>
+        </header>
+        <section class="receipt-info">
+            <div class="info-block">
+                <span>Bank A/c Code:</span> <span>1140006</span>
+            </div>
+            <div class="info-block">
+                <span>Date:</span> <span>04/04/2024</span>
+            </div>
+            <div class="info-block">
+                <span>Bank A/c Name:</span> <span>Carl Stahl Trading AED</span>
+            </div>
+            <div class="info-block">
+                <span>Document No:</span> <span>BR/2024/00954</span>
+            </div>
+            <div class="info-block">
+                <span>Bank A/c No:</span> <span>1014560245701</span>
+            </div>
+        </section>
+        <section class="payment-details">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Currency</th>
+                        <th>Cheque No</th>
+                        <th>Cheque Date</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ALLIANZ MIDDLE EAST SHIP MANAGEMENT LLC</td>
+                        <td>AED</td>
+                        <td>0</td>
+                        <td></td>
+                        <td>47,853.75</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="narration">
+            <p>
+                Narration: ALLIANZ MIDDLE EAST SHIP MANAGEMENT LLC: SO/2024/02235, 02236, 02238 & 02237 IN/2024/CLET/00545, 00544, 00546 & 00547
+            </p>
+        </section>
+        <section class="amount-in-words">
+            <p>Amount in words: AED Forty Seven Thousand Eight Hundred Fifty Three and fils Seventy Five only</p>
+        </section>
+        <footer>
+            <div class="signatures">
+                <div>Accountant</div>
+                <div>Finance Manager</div>
+                <div>General Manager</div>
+                <div>Receiver</div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Example of setting dynamic data
+            const data = {
+                bankAccountCode: '1140006',
+                date: '04/04/2024',
+                bankAccountName: 'Carl Stahl Trading AED',
+                documentNo: 'BR/2024/00954',
+                bankAccountNo: '1014560245701',
+                name: 'ALLIANZ MIDDLE EAST SHIP MANAGEMENT LLC',
+                currency: 'AED',
+                chequeNo: '0',
+                chequeDate: '',
+                amount: '47,853.75',
+                narration: 'ALLIANZ MIDDLE EAST SHIP MANAGEMENT LLC: SO/2024/02235, 02236, 02238 & 02237 IN/2024/CLET/00545, 00544, 00546 & 00547',
+                amountInWords: 'AED Forty Seven Thousand Eight Hundred Fifty Three and fils Seventy Five only'
+            };
+
+            document.querySelector('.receipt-info .info-block:nth-child(1) span:nth-child(2)').textContent = data.bankAccountCode;
+            document.querySelector('.receipt-info .info-block:nth-child(2) span:nth-child(2)').textContent = data.date;
+            document.querySelector('.receipt-info .info-block:nth-child(3) span:nth-child(2)').textContent = data.bankAccountName;
+            document.querySelector('.receipt-info .info-block:nth-child(4) span:nth-child(2)').textContent = data.documentNo;
+            document.querySelector('.receipt-info .info-block:nth-child(5) span:nth-child(2)').textContent = data.bankAccountNo;
+
+            const tableRow = document.querySelector('.payment-details tbody tr');
+            tableRow.children[0].textContent = data.name;
+            tableRow.children[1].textContent = data.currency;
+            tableRow.children[2].textContent = data.chequeNo;
+            tableRow.children[3].textContent = data.chequeDate;
+            tableRow.children[4].textContent = data.amount;
+
+            document.querySelector('.narration p').textContent = `Narration: ${data.narration}`;
+            document.querySelector('.amount-in-words p').textContent = `Amount in words: ${data.amountInWords}`;
+        });
+
+    </script>
+</body>
+</html>

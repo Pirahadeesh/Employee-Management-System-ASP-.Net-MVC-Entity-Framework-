@@ -1,0 +1,149 @@
+﻿@model DGHCM.Models.EmployeeDetail
+@{
+    ViewBag.Title = "EmployeeDetailsEdit";
+}
+
+
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center">
+            <div class="card-title text-black mb-0 p-0">Employee Edit</div>
+            <div>
+                <button class="btn btn-transparent border border-black" id="save" type="submit" value="SaveAndSubmit" name="action"><i class="fa-solid fa-floppy-disk"></i><span>&nbsp;Save</span></button>
+                <a href="~/Employee/EmployeeDetailsCreate" class="btn btn-transparent border border-black" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+            </div>            
+        </div>
+        <div class="card-body p-4">
+            <div class="box">
+
+                @using (Html.BeginForm("EmployeeDetailsEdit", "Employee", FormMethod.Post))
+                {
+                    <div class="container-fluid">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="First name" name="firstName" value="@Model.FirstName" autocomplete="off" required />
+                            </div>
+
+                            <div class="col">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Last name" name="lastName" value="@Model.LastName" autocomplete="off" required />
+                            </div>
+
+                            <div class="col">
+                                <label for="designation" class="form-label">Designation</label>
+                                <input type="text" class="form-control" id="designation" placeholder="Designation" name="designation" value="@Model.Designation" autocomplete="off" required />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="emailId" class="form-label">Email Id</label>
+                                <input type="email" class="form-control" id="emailId" placeholder="EmailId" name="emailId" value="@Model.EmailId" autocomplete="off" />
+                            </div>
+
+                            <div class="col">
+                                <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                <input type="date" class="form-control" id="dateOfBirth" placeholder="DateOfBirth" name="dateOfBirth" min="1995-12-31" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" required />
+                            </div>
+
+                            <div class="col">
+                                <label for="DateOfJoining" class="form-label">Date Of Joining</label>
+                                <input type="date" class="form-control " id="dateOfJoining" placeholder="DateOfJoining" name="dateOfJoining" value="@Model.DateOfJoining.ToString("yyyy-MM-dd")" required />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="PhoneNo" class="form-label">Phone No</label>
+                                <input type="tel" class="form-control" id="phoneNo" placeholder="PhoneNo" name="phoneNo" value="@Model.PhoneNo" autocomplete="off" required />
+                            </div>
+
+                            <div class="col">
+                                <label for="Nationality" class="form-label">Nationality</label>
+                                <input type="text" class="form-control" id="nationality" placeholder="Nationality" name="nationality" value="@Model.Nationality" autocomplete="off" required>
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">Employee Shift</label>
+                                <select class="form-control" name="EmployeeShift" required>
+                                    <option value="Regular Shift" @(Model.EmployeeShift == "RegularShift" ? "selected" : "" )>Regular Shift</option>
+                                    <option value="Night Shift" @(Model.EmployeeShift == "NightShift" ? "selected" : "" )>Night Shift</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="AccountNo" class="form-label">Account No</label>
+                                <input type="text" class="form-control" id="accountNo" placeholder="AccountNo" name="accountNo" maxlength="12" value="@Model.AccountNo" autocomplete="off" required />
+                            </div>
+
+                            <div class="col">
+                                <label for="Gender" class="form-label">Gender</label><br />
+                                <div class="form-check form-switch ps-0">
+                                    <input type="checkbox" name="gender" data-toggle="toggle" @(Model.Gender == 1 ? "checked" : "") data-on="Male" data-off="Female" data-onstyle="primary" data-offstyle="Primary" value="@(Model.Gender == 1 ? 1 : 2)">
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <label for="maritalstatus" class="form-label">Marital Status</label><br />
+                                <div class="form-check form-switch ps-0">
+                                    <input type="checkbox" name="maritalStatus" id="maritalStatus" data-toggle="toggle" @(Model.MaritalStatus == "Married" ? "checked" : "") data-on="Married" data-off="Unmarried" data-onstyle="primary" data-offstyle="Primary" value="@(Model.MaritalStatus== "Married" ? "Married" : "Unmarried")">
+                                </div>
+
+                                @*<input class="form-check-input" type="radio" name="maritalStatus" id="married" value="Married" @(Model.MaritalStatus == "Married" ? "checked" : "" ) required> Married
+                                <input class="form-check-input" type="radio" name="maritalStatus" id="Unmarried" value="Unmarried" @(Model.MaritalStatus == "Unmarried" ? "checked" : "" ) required> Unmarried*@
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label for="employeeAddress" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="employeeAddress" name="employeeAddress" aria-describedby="inputGroupPrepend" maxlength="200" placeholder="Address" value="@Model.EmployeeAddress" autocomplete="off" required>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    @if (Model.IsActive == true)
+                                    {
+                                        <input class="form-check-input" type="checkbox" id="isactive" name="isactive" value="@Model.IsActive" checked>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input" type="checkbox" id="isactive" name="isactive" value="@Model.IsActive">
+
+                                    }
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">IsActive</label>
+                                </div>
+                            </div>
+
+
+                            @*<div class="col">
+                                @Html.CheckBoxFor(model => model.IsActive, new { @class = "form-check-input", id = "isActive" })&nbsp; IsActive
+                            </div>*@
+
+                            <div class="col">
+                                <label for="EmployeeId" hidden="hidden" class="form-label">Employee Id</label>
+                                <input type="text" class="form-control" id="employeeId" placeholder="EmployeeId" name="employeeId" hidden="hidden" value="@Model.EmployeeId" required>
+                            </div>
+                        </div>
+
+                        <br />
+                    </div>
+
+                    <br />
+                    <div class="form-row" align="left">
+                        <button class="btn btn-primary" type="submit" name="action">Submit</button>
+                    </div>
+
+                }
+            </div>
+            <div>
+            </div>
+        </div>
+    </div>
+    </div>
+

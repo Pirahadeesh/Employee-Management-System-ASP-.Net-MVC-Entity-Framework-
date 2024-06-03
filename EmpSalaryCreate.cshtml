@@ -1,0 +1,97 @@
+﻿@model DGHCM.ViewModel.SalaryVM
+@{
+    ViewBag.Title = "EmpSalaryCreate";
+
+}
+
+<script src="~/Scripts/bootstrap.bundle.js"></script>
+
+
+
+<style>
+    body {
+        background-image: url('../../content/images/office image.png');
+        background-size: cover;
+    }
+
+    .card {
+        background: #fff5;
+        backdrop-filter: blur(3px);
+        border-radius: 20px;
+    }
+
+    .card-header {
+        background: #ffffffa1;
+        border-top-left-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+    }
+
+
+
+    .card-body {
+        background: #fffb;
+        border-bottom-left-radius: 20px !important;
+        border-bottom-right-radius: 20px !important;
+    }
+
+    thead th {
+        background: #d5d1defe;
+    }
+</style>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center">
+
+            <div class="card-title text-black mb-0 p-0">Salary Details</div>
+            <div>
+                <a href="#" class="btn btn-transparent border border-black" data-toggle="modal"><i class="fa-solid fa-floppy-disk"></i><span>&nbsp;Save</span></a>
+                <a href="~/Employee/EmpSalaryIndex" class="btn btn-transparent border border-black" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form class="needs-validation" name="screate" method="post" id="fileForm" enctype="multipart/form-data">
+                <div id="SalarySections">
+                    <div class="col-md-4 mb-3">
+                        <span class="details">EmployeeName</span>
+                        @Html.DropDownList("EmployeeList", null, "--select--", htmlAttributes: new { @id = "EmployeeId", @class = "form-control form-select selectpicker" })
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="details">SalaryType</span>
+                        @Html.DropDownList("SalaryType", null, "--select--", htmlAttributes: new { @id = "SalaryTypeId", @class = "form-control form-select selectpicker" })
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <span class="details">Amount</span>
+                        <input type="text" class="form-control" id="credit" placeholder="enter amount" name="Amount">
+                    </div>
+                    <div class=" form-check form-switch col-md-4 mb-3">
+                        <input class="form-check-input" type="checkbox" id="active" name="IsActive">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">IsActive</label>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-transparent border border-black" type="submit" value="SaveAndSubmit" name="action">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function validate() {
+        let name = document.forms["screate"]["EmployeeName"].value;
+        if (name == "")
+            alert("Please enter the name");
+        return false;
+        let name = document.forms["screate"]["SalaryType"].value;
+        if (name == "")
+            alert("Please enter the name");
+        return false;
+        let name = document.forms["screate"]["Amount"].value;
+        if (name == "")
+            alert("Please enter the name");
+        return false;
+    }
+</script>
+
+

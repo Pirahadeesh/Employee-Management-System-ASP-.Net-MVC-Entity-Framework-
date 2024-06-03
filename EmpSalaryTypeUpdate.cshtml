@@ -1,0 +1,94 @@
+﻿@model DGHCM.Models.SalaryTypeMaster
+
+@{
+    ViewBag.Title = "EmpSalaryTypeCreate";
+}
+<script src="~/Scripts/bootstrap.bundle.js"></script>
+
+<style>
+    body {
+        background-image: url('../../content/images/office image.png');
+        background-size: cover;
+    }
+
+    .card {
+        background: #fff5;
+        backdrop-filter: blur(7px);
+        border-radius: 50%
+    }
+
+    .card-header {
+        background: #ffffffa1;
+    }
+
+    .card-body {
+        background: #fffb;
+    }
+
+    thead th {
+        background: #d5d1defe;
+    }
+</style>
+<form class="needs-validation" name="tupdate" method="post" id="fileForm" @*onsubmit="return validate()"*@ enctype="multipart/form-data">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center">
+
+                <div class="card-title text-black mb-0 p-0">Salary Type Details</div>
+                <div>
+                    <button class="btn btn-transparent border border-black" type="submit" value="SaveAndSubmit" name="action"><i class="fa-solid fa-floppy-disk"></i><span>&nbsp;Update</span></button>
+                    <a href="~/Employee/EmpSalaryTypeIndex" class="btn btn-transparent border border-black" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-md-4 mb-3">
+                    <label for="SalaryType" id="label">SalaryType</label>
+                    <input type="text" class="form-control" id="SalaryType" name="SalaryTypeName" placeholder="enter name" value="@Model.SalaryTypeName" required>
+                    <input type="hidden" class="form-control" id="id" placeholder="enter id" name="SalaryTypeId" value="@Model.SalaryTypeId">
+                </div>
+                <div class="form-check form-switch col-md-4 mb-3">
+                    @if (Model.AllowanceAndDeduction == true)
+                    {
+                        <input class="form-check-input" type="checkbox" id="AllowOrDeduct" name="AllowanceOrDeduction" checked>
+                    }
+                    else
+                    {
+                        <input class="form-check-input" type="checkbox" id="AllowOrDeduct" name="AllowanceOrDeduction">
+                    }
+                    <label class="form-check-label" for="flexSwitchCheckDefault">AllowanceOrDeduction</label>
+                </div>
+                <div class="form-check form-switch col-md-4 mb-3">
+                    @if (Model.IsActive == true)
+                    {
+                        <input class="form-check-input" type="checkbox" id="active" name="IsActive" value="@Model.IsActive" checked>
+                    }
+                    else
+                    {
+                        <input class="form-check-input" type="checkbox" id="active" name="IsActive" value="@Model.IsActive">
+                    }
+                    <label class="form-check-label" for="flexSwitchCheckDefault">IsActive</label>
+                </div>
+                <div class="form-check form-switch col-md-4 mb-3">
+                    @if (Model.IsFixedPay == true)
+                    {
+                        <input class="form-check-input" type="checkbox" id="FixedPay" name="IsFixedPay" value="@Model.IsFixedPay" checked>
+                    }
+                    else
+                    {
+                        <input class="form-check-input" type="checkbox" id="FixedPay" name="IsFixedPay" value="@Model.IsFixedPay">
+                    }
+                    <label class="form-check-label" for="flexSwitchCheckDefault">IsFixedPay</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function validate() {
+        let name = document.forms["tupdate"]["SalaryType"].value;
+        if (name == "")
+            alert("Please enter the name");
+        return false;
+    }
+</script>
+

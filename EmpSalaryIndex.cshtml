@@ -1,0 +1,234 @@
+﻿@model List<DGHCM.ViewModel.SalaryVM>
+@{
+    ViewBag.Title = "EmpSalaryIndex";
+    /* Layout = "~/Views/Shared/_SidebarLayout.cshtml";*/
+}
+
+
+<!DOCTYPE html>
+<style>
+/*    body {
+        background-image: url('../../content/images/office image.png');
+        background-size: cover;
+    }*/
+
+    .card {       
+        background: #fff5;
+        backdrop-filter: blur(7px);
+        border-radius: 50%
+    }
+
+    .card-header {
+        background: #ffffffa1;
+        padding:4px;
+    }
+
+    .card-body {
+        background: #fffb;
+    }
+
+    thead th {
+        background: #d5d1defe;
+    }
+    .text-black {
+        font-size: 25px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header  text-black d-flex flex-wrap justify-content-between align-items-center" >
+
+            <div>
+                <h2 class="text-black m-0">Salary Details</h2>
+            </div>
+            <div>
+                @*<a href="~/Employee/EmpSalaryCreate" class="btn btn-transparent" data-toggle="modal" id="AddSalary"><i class="fa-solid fa-sack-dollar fa-lg"></i><span>Add Salary</span></a>*@
+                <button class="btn btn-transparent" id="AddSalary">Add Salary</button>
+                @*<a href="#deleteEmployeeModal" class="btn btn-transparent" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>*@
+              </div>
+        </div>
+        <div class="card-body ">
+            <form class="main" name="Display" id="file">
+               @* @{ int i = 1;}*@
+
+               @* @if (Model != null && Model.Count > 0)
+                {*@
+                    <table class="table table-bordered table-striped table-hover mt-2">
+                        <thead class="bg-secondary-light">
+                            <tr align="center">
+                                <th scope="col">S.No</th>
+                                <th scope="col">Employee Name</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Salary Type</th>
+                                <th  scope="col">Status</th>
+                                <th colspan=2>Action</th>
+                            </tr>
+                        </thead>  
+                        <tbody class="text-center" id="table_data"></tbody>
+                    </table>
+               @* }*@
+                @*else
+                {
+                    <span> No records found!!</span>
+                }*@
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="madal fade modal" id="SalaryModal" style="display:none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="text-info modal-title">Add Salary</h1>
+                <a href="~/Employee/EmpSalaryIndex" class="close pull-right" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body">
+                <div class="modal-footer"></div>
+                <form method="post" id="form">
+                    <div class="form-group">
+                        <span class="details">Employee Name</span>
+                        @Html.DropDownList("EmployeeList", null, "--select--", htmlAttributes: new { @id = "EmployeeId", @class = "form-control form-select selectpicker" })
+                    </div>
+                    <div class="form-group">
+                        <span class="details">Salary Type</span>
+                        @Html.DropDownList("SalaryType", null, "--select--", htmlAttributes: new { @id = "SalaryTypeId", @class = "form-control form-select selectpicker" })
+                    </div>
+                    <div class="form-group">
+                        <span class="details">Amount</span>
+                        <input type="text" class="form-control" id="Amount" />
+                    </div>
+                    <div class=" form-check form-switch  col-md-6">
+                        <input class="form-check-input" type="checkbox" id="active" name="IsActive">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">IsActive</label>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="~/Employee/EmpSalaryIndex" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                        <a href="~/Employee/EmpSalaryIndex" class="btn btn-success" onclick="AddSalary();" id="AddSalary">Save</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-blur fade" id="myModal1">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-between align-items-center">
+
+                <h5 class="modal-title">Delete Salary</h5>
+                <a href="~/Employee/EmpSalaryIndex" class="close pull-right" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body text-center">
+                <h4>Are you sure? </h4>
+                <p>You want to delete this.</p>
+                <div style="text-align:center;display:none" id="loaderDiv" ;></div>
+            </div>
+            <div class="modal-footer">
+                <a href="~/Employee/EmpSalaryIndex" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                <a href="~/Employee/EmpSalaryIndex" class="btn btn-success" onclick="DeleteSalary()">Confirm</a>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hiddenSalaryId" value="@Url.Action("SalaryList", "EmployeeController")" />
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var ConfirmDelete = function (SalaryId) {
+        $("#hiddenSalaryId").val(SalaryId);
+        $("#myModal1").modal("show");
+    }
+    function DeleteSalary() {
+        $("#loaderDiv").show();
+        var salId = $("#hiddenSalaryId").val();
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ SalaryId: salId }),
+            url: "EmpSalaryDelete",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#loaderDiv").hide();
+                $("#myModal1").modal("hide");
+                $("#row_" + salId).remove();
+                window.location.reload();
+            }
+        })
+    }
+
+
+
+    $(document).ready(function () {
+        ShowSalaryData();
+    });
+
+    function ShowSalaryData() {
+        /*  var url = $('#hiddenSalaryId').val();*/
+       /* $("#form").submit(function (e) {
+            e.preventDefault();
+            var frm = $("#form");
+            var data = {};
+            $.each(this, function (i, v) {
+                var input = $(v);
+                data[input.attr("name")] = input.val();
+                delete data["undefined"];
+            });*/
+        
+        $.ajax({
+            url: 'SalaryList',
+            type: 'Get',
+            dataType: 'json',
+            contentType: 'application/ json.charset=utf- 8;',
+            success: function (result, status, xhr) {
+                var i = 1;
+                var object = "";
+                for (var i = 0; i < result.length; i++) {
+                    object += '<tr>';
+                    object += '<td>' + (i+1) + '</td>';
+                    object += '<td>' + result[1].EmployeeName + '</td>';
+                    object += '<td>' + result[2].Amount + '</td>';
+                    object += '<td>' + result[3].SalaryType + '</td>';
+                    object += '<td>' + result[4].IsActive + '</td>';
+                    object += '<td><a href="#" <i class="fa fa-edit"></i></a>" "<a href="#" <i class="fa fa-trash text-danger"></i></a></td>';
+                    object += '</tr>';
+                }
+               
+                $('#tblbody').html(object);
+            },
+            
+            error: function () {
+                alert("Data can't get");
+            }
+            
+        });
+    }
+
+    $('#AddSalary').click(function () {
+        $('#SalaryModal').modal('show');
+      /*  var a = document.getElementById("SalaryModal");
+        a.style.display = "block";*/
+    });
+    function AddSalary() {
+        var objData = {
+            EmployeeName: $('#EmployeeId').val(),
+            SalaryType: $('#SalaryTypeId').val(),
+            Amount: $('#Amount').val(),
+            IsActive: $('#active').prop('checked')/*val()*/
+        }
+         @{int i = 1; }
+        $.ajax({
+             url: 'AddSalary',
+            type: 'Post',
+            data: JSON.stringify(objData),
+            contentType: 'application/ json.charset=utf- 8;',
+            dataType: 'json',
+            success: function (data) {
+                     i = i + 1;
+                     alert("Data Saved");
+                 },
+            error: function () {
+                     alert("Data can't Saved!");
+                 }
+             });
+    }
+</script>

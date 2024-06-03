@@ -1,0 +1,162 @@
+﻿
+@model List<DGHCM.Models.EmployeeDetail>
+
+@{
+    ViewBag.Title = "EmployeeDetailsIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-image: url('../../content/images/office image.png');
+        background-size: cover;
+    }
+
+    .text-black {
+        font-size: 25px;
+    }
+
+    .card {
+        background: #fff5;
+        backdrop-filter: blur(3px);
+        border-radius: 20px;
+    }
+
+    .card-header {
+        background: #ffffffa1;
+        border-top-left-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+    }
+
+    .card-body {
+        background: #fffb;
+        border-bottom-left-radius: 20px !important;
+        border-bottom-right-radius: 20px !important;
+    }
+
+    thead th {
+        background: #d5d1defe;
+    }
+</style>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header text-black d-flex flex-wrap justify-content-between align-items-center">
+            <div class="card-title text-black mb-0 p-0">Employee Index</div>
+            <div>
+                <a href="~/Employee/EmployeeDetailsCreate" class="btn btn-transparent border border-black" data-toggle="modal"><i class="fa-solid fa-circle-plus"></i><span> Add New</span></a>
+            </div>
+        </div>
+
+        <div class="card-body ">
+            <div class="container">
+                <form class="main" name="Display">
+
+                    <br />
+                    @{
+                        if (Model != null && Model.Count > 0)
+                        {
+                            <table class="table table-bordered table-striped table-hover mt-2">
+                                <thead class="bg-secondary-light">
+                                    <tr align="center">
+                                        <th hidden="hidden">Employee Id</th>
+                                        <th>S.No</th>
+                                        <th>Employee Name</th>
+                                        <th>Designation</th>
+                                        <th>Email Id</th>
+                                        <th>Phone No</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @{int i = 1;}
+
+                                    @foreach (var dr in Model)
+                                    {
+                                        <tr>
+                                            <td hidden="hidden">@dr.EmployeeId</td>
+                                            <td class="text-center">@i</td>
+                                            <td>@dr.FirstName @dr.LastName</td>
+                                            <td>@dr.Designation</td>
+                                            <td>@dr.EmailId</td>
+                                            <td>@dr.PhoneNo</td>
+                                            <td class="text-center">
+                                                @if (dr.IsActive == true)
+                                                {
+                                                    <span class="badge rounded-pill bg-success">Active</span>}
+                                                else
+
+                                                {<span class="badge rounded-pill bg-danger">Deactive</span>}
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="d-grid gap-2 d-md-block">
+                                                    <a href="~/Employee/EmployeeDetailsEdit?id=@dr.EmployeeId"><i class="fa fa-edit text-primary"></i></a>                                          
+                                                    <a href="#" onclick="ConfirmDelete(@dr.EmployeeId)"><i class="fa fa-trash text-danger"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <span> No records found!!</span>
+                        }
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="myModal1">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-between align-items-center">
+                <h5 class="modal-title">Delete Document</h5>
+                <a href="~/Employee/EmployeeDetailsIndex" class="close pull-right" data-dismiss="modal">&times;</a>
+            </div>
+
+            <div class="modal-body text-center">
+                <h4>Are you sure? </h4>
+                <p>You want to delete this.</p>
+                <div style="text-align:center;display:none" id="loaderDiv" ;></div>
+            </div>
+            <div class="modal-footer">
+                <a href="~/Employee/EmployeeDetailsIndex" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                <a href="#" class="btn btn-success" onclick="EmployeeDetailsDelete()">Confirm</a>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hiddenDocumentId" />
+</div>
+
+<script>
+    var ConfirmDelete = function (Id) {
+        $("#hiddenDocumentId").val(Id);
+        $("#myModal1").modal("show");
+    }
+    function DeleteDocument() {
+        $("#loaderDiv").show();
+        var EmployeeId = $("#hiddenDocumentId").val();
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({ Id: EmployeeId }),
+            url: "AllowanceDelete",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                $("#loaderDiv").hide();
+                $("#myModal1").modal("hide");
+                    $("#row_" + EmployeeId).remove();
+                window. location. reload();
+            }
+        })
+    }
+
+</script>
+

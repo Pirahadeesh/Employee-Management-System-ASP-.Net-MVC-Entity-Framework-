@@ -1,0 +1,99 @@
+﻿@model DGHCM.Models.UserDetail
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .field-icon {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+</style>
+
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header text-black d-flex flex-wrap justify-content-between align-items-center">
+            <div class="card-title text-black mb-0 p-0"> User Edit </div>
+
+            <div>
+                <a href="#" class="btn btn-transparent" data-toggle="modal"><i class="fa-solid fa-circle-plus"></i><span> Save </span></a>
+                <a href="~/Login/UserIndex" class="btn btn-transparent" data-toggle="modal"><i class="fa-solid fa-circle-arrow-left"></i> <span> Back</span></a>
+            </div>
+
+        </div>
+
+
+        <form class="card-body" method="post">
+
+            <div hidden="hidden">
+                <div class="col-md-4 mb-3">
+                    <label for="userId">UserId</label>
+                    <input type="text" class="user form-control" id="UserId" name="UserId" value="@Model.UserId">
+                </div>
+            </div>
+
+            <br />
+
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="UserName"> User Name</label>
+                    <input type="text" class="user form-control" id="Username" name="Username" value="@Model.UserName">
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="password-field" class="col-md-4 control-label">Password</label>
+                    <div class="position-relative">
+                        <input id="password-field" type="password" class="form-control" name="password" value="@Model.Userpassword">
+                        <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="Email">Email</label>
+                    <input type="text" class="user form-control" id="Email" name="Email" value="@Model.Email">
+                </div>
+
+            </div>
+            <div class="col-auto">
+                @Html.CheckBoxFor(model => model.IsActive, new { @class = "form-check-input", id = "isActive" })&nbsp; IsActive
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-primary">
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <br />
+
+
+    </div>
+
+<script>
+    $(".toggle-password").click(function () {
+
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+</script>
+
+
